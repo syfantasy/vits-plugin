@@ -18,14 +18,14 @@
 #### 1. 克隆仓库
 
 ```
-git clone https://github.com/erzaozi/vits-plugin.git ./plugins/vits-plugin
+git clone https://github.com/syfantasy/vits-plugin.git ./plugins/vits-plugin
 ```
 
 > [!NOTE]
 > 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://mirror.ghproxy.com/) 提供的文件代理加速下载服务
 >
 > ```
-> git clone https://mirror.ghproxy.com/https://github.com/erzaozi/vits-plugin.git ./plugins/vits-plugin
+> git clone https://mirror.ghproxy.com/https://github.com/syfantasy/vits-plugin.git ./plugins/vits-plugin
 > ```
 
 #### 2. 安装依赖
