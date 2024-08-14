@@ -1,25 +1,23 @@
-import { TextToSpeech as BertVITSTextToSpeech } from '../components/Bert-VITS2.js';
-import { TextToSpeech as GPTSoVITSTextToSpeech } from '../components/GPT-SoVITS.js';
-import { TextToSpeech as FishAudioTTSTextToSpeech } from '../components/Fish-Audio.js';
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
-import { getRecord } from '../components/Record.js'
+import fetch from 'node-fetch'
+import fs from 'fs'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
+import path from 'path'
+
+const streamPipeline = promisify(pipeline)
 
 export class TTS extends plugin {
   constructor() {
     super({
-      /** 功能名称 */
       name: 'VITS-文本转语音',
-      /** 功能描述 */
       dsc: '文本转语音',
       event: 'message',
-      /** 优先级，数字越小等级越高 */
       priority: 1,
       rule: [
         {
-          /** 命令正则匹配 */
           reg: '^[/#]?合成.*语音.*$',
-          /** 执行方法 */
           fnc: 'tts'
         }
       ]
@@ -30,26 +28,39 @@ export class TTS extends plugin {
     const [_, role, text] = e.msg.match(/^[/#]?合成(.*?)语音(.*?)$/) || [];
     if (!role || !text) return e.reply(`请输入要使用的${role ? '文本' : '角色'}`);
 
-    const { tts_config: c } = await Config.getConfig();
-    if (c.send_reminder) await e.reply('正在合成语音，请稍等...', true);
+    const config = await Config.getConfig();
+    if (config.tts_config.send_reminder) await e.reply('正在合成语音，请稍等...', true);
 
-    let url;
+    try {
+      const response = await fetch(config.api_url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${config.api_key}`,
+          'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'hailuo',
+          input: text,
+          voice: role
+        })
+      });
 
-    if (c.use_model_type == 'GPT-SoVITS') {
-      url = await GPTSoVITSTextToSpeech(role, text, c);
-    } else if (c.use_model_type == 'Fish-Audio') {
-      url = await FishAudioTTSTextToSpeech(role, text, c);
-    } else {
-      url = await BertVITSTextToSpeech(role, text, c);
-    }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    if (!url) return e.reply('合成失败，请检查角色名和文本内容，或检查控制台报错\n  Tips：更换模型类型后请重新设置源，每个源支持的角色不同，相关列表请查看本插件README.md文档');
+      const audioFilePath = path.join(process.cwd(), `temp_${Date.now()}.mp3`);
+      await streamPipeline(response.body, fs.createWriteStream(audioFilePath));
 
-    if (c.send_base64) {
-      const base64 = await getRecord(url);
-      await e.reply(segment.record(`base64://${base64}`));
-    } else {
-      await e.reply(segment.record(url));
+      await e.reply(segment.record(audioFilePath));
+
+      // 删除临时文件
+      fs.unlinkSync(audioFilePath);
+
+    } catch (error) {
+      console.error('TTS 请求失败:', error);
+      return e.reply('语音合成失败，请检查配置或稍后再试。');
     }
 
     return true;
