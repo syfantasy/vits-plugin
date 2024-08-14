@@ -1,186 +1,99 @@
+// guoba.support.js
+
 import Config from "./components/Config.js";
-import lodash from "lodash";
-import path from "path";
-import { pluginRoot } from "./model/path.js";
 
 export function supportGuoba() {
   return {
     pluginInfo: {
       name: 'vits-plugin',
-      title: '在线VITS插件',
-      author: ['@erzaozi', '@CikeyQi'],
-      authorLink: ['https://github.com/erzaozi', 'https://github.com/CikeyQi'],
-      link: 'https://github.com/erzaozi/vits-plugin',
+      title: 'VITS插件',
+      author: '@Your_Name',
+      authorLink: 'https://github.com/Your_Name',
+      link: 'https://github.com/Your_Name/vits-plugin',
       isV3: true,
       isV2: false,
-      showInMenu: true,
-      description: '基于 Yunzai 的在线语音合成插件',
-      // 显示图标，此为个性化配置
-      // 图标可在 https://icon-sets.iconify.design 这里进行搜索
-      icon: 'icon-park:voice-message',
-      // 图标颜色，例：#FF0000 或 rgb(255, 0, 0)
-      iconColor: '#d19f56',
-      // 如果想要显示成图片，也可以填写图标路径（绝对路径）
-      iconPath: path.join(pluginRoot, 'resources/readme/girl.png'),
+      description: '基于海螺API的语音同传插件',
+      icon: 'mdi:text-to-speech',
+      iconColor: '#7CFC00'
     },
     configInfo: {
       schemas: [
         {
-          component: "Divider",
-          label: "TTS 相关配置",
+          field: 'api_key',
+          label: 'API Key',
+          bottomHelpMessage: '海螺API的密钥',
+          component: 'Input',
+          required: true,
           componentProps: {
-            orientation: "left",
-            plain: true,
-          },
+            placeholder: '请输入API Key'
+          }
         },
         {
-          field: "tts_config.use_model_type",
-          label: "TTS 模型类型",
-          bottomHelpMessage: "选择TTS模型类型",
-          component: "Select",
+          field: 'api_url',
+          label: 'API URL',
+          bottomHelpMessage: '海螺API的URL',
+          component: 'Input',
+          required: true,
+          componentProps: {
+            placeholder: 'https://hailuo-free-api-0rpw.onrender.com/v1/audio/speech'
+          }
+        },
+        {
+          field: 'default_voice',
+          label: '默认发音人',
+          bottomHelpMessage: '默认使用的发音人',
+          component: 'Select',
           componentProps: {
             options: [
-              { label: "Bert-VITS2", value: "Bert-VITS2" },
-              { label: "GPT-SoVITS", value: "GPT-SoVITS" },
-              { label: "Fish-Audio", value: "Fish-Audio" },
-            ],
-          },
+  { value: 'male-botong', name: '思远', compatibility: 'tts-1 alloy' },
+  { value: 'Podcast_girl', name: '心悦', compatibility: 'tts-1 echo' },
+  { value: 'boyan_new_hailuo', name: '子轩', compatibility: 'tts-1 fable' },
+  { value: 'female-shaonv', name: '灵儿', compatibility: 'tts-1 onyx' },
+  { value: 'YaeMiko_hailuo', name: '语嫣', compatibility: 'tts-1 nova' },
+  { value: 'xiaoyi_mix_hailuo', name: '少泽', compatibility: 'tts-1 shimmer' },
+  { value: 'xiaomo_sft', name: '芷溪', compatibility: 'tts-1-hd alloy' },
+  { value: 'cove_test2_hailuo', name: '浩翔', language: '英文' },
+  { value: 'scarlett_hailuo', name: '雅涵', language: '英文' },
+  { value: 'Leishen2_hailuo', name: '雷电将军', compatibility: 'tts-1-hd echo' },
+  { value: 'Zhongli_hailuo', name: '钟离', compatibility: 'tts-1-hd fable' },
+  { value: 'Paimeng_hailuo', name: '派蒙', compatibility: 'tts-1-hd onyx' },
+  { value: 'keli_hailuo', name: '可莉', compatibility: 'tts-1-hd nova' },
+  { value: 'Hutao_hailuo', name: '胡桃', compatibility: 'tts-1-hd shimmer' },
+  { value: 'Xionger_hailuo', name: '熊二' },
+  { value: 'Haimian_hailuo', name: '海绵宝宝' },
+  { value: 'Robot_hunter_hailuo', name: '变形金刚' },
+  { value: 'Linzhiling_hailuo', name: '小玲玲' },
+  { value: 'huafei_hailuo', name: '拽妃' },
+  { value: 'lingfeng_hailuo', name: '东北er' },
+  { value: 'male_dongbei_hailuo', name: '老铁' },
+  { value: 'Beijing_hailuo', name: '北京er' },
+  { value: 'JayChou_hailuo', name: 'JayJay' },
+  { value: 'Daniel_hailuo', name: '潇然' },
+  { value: 'Bingjiao_zongcai_hailuo', name: '沉韵' },
+  { value: 'female-yaoyao-hd', name: '瑶瑶' },
+  { value: 'murong_sft', name: '晨曦' },
+  { value: 'shangshen_sft', name: '沐珊' },
+  { value: 'kongchen_sft', name: '祁辰' },
+  { value: 'shenteng2_hailuo', name: '夏洛特' },
+  { value: 'Guodegang_hailuo', name: '郭嘚嘚' },
+  { value: 'yueyue_hailuo', name: '小月月' }
+            ]
+          }
         },
         {
-          field: "tts_config.use_interface_sources",
-          label: "TTS 接口来源",
-          bottomHelpMessage: "选择TTS接口来源",
-          component: "Select",
-          componentProps: {
-            options: [
-              { label: "Modelscope", value: "Modelscope" },
-              { label: "Huggingface", value: "Huggingface" },
-            ],
-          },
-        },
-        {
-          field: "tts_config.send_reminder",
-          label: "TTS 接收命令提示",
-          bottomHelpMessage: "接收到命令时是否发送提示",
-          component: "Switch",
-        },
-        {
-          field: "tts_config.send_base64",
-          label: "Base64 发送",
-          bottomHelpMessage: "避免网络质量不佳导致的语音无法发出",
-          component: "Switch",
-        },
-        {
-          field: "modelscope_cookie",
-          label: "Modelscope Cookie",
-          bottomHelpMessage: "用于需要登录的魔搭平台创空间验证",
-          component: "Input",
-          componentProps: {
-            placeholder: '请输入 Cookie',
-          },
-        },
-        {
-          field: "fishaudio_authorization",
-          label: "Fish-Audio Token",
-          bottomHelpMessage: "用于需要登录的Fish Audio平台",
-          component: "Input",
-          componentProps: {
-            placeholder: '请输入 Token',
-          },
-        },
-        {
-          component: "Divider",
-          label: "同传 相关配置",
-          componentProps: {
-            orientation: "left",
-            plain: true,
-          },
-        },
-        {
-          field: "tts_sync_config",
-          label: "同传配置",
-          bottomHelpMessage: "用于同传的配置",
-          component: "GSubForm",
-          componentProps: {
-            multiple: true,
-            schemas: [
-              {
-                field: "user_id",
-                label: "同传用户ID",
-                component: "Input",
-                required: true,
-              },
-              {
-                field: "enable_group",
-                label: "同传群组",
-                bottomHelpMessage: "若用户在此群组中发言，将启用同传",
-                component: "GTags",
-                componentProps: {
-                  placeholder: '请输入群组ID',
-                  allowAdd: true,
-                  allowDel: true,
-                  showPrompt: true,
-                  promptProps: {
-                    content: '请输入群组ID',
-                    placeholder: '551081559',
-                    okText: '添加',
-                    rules: [
-                      { required: true, message: '群组ID不能为空' },
-                    ],
-                  },
-                  valueParser: ((value) => value.split(',') || []),
-                },
-              },
-              {
-                field: "use_model_type",
-                label: "同传 模型类型",
-                bottomHelpMessage: "选择同传模型类型",
-                component: "Select",
-                componentProps: {
-                  options: [
-                    { label: "Bert-VITS2", value: "Bert-VITS2" },
-                    { label: "GPT-SoVITS", value: "GPT-SoVITS" },
-                    { label: "Fish-Audio", value: "Fish-Audio" },
-                  ],
-                },
-              },
-              {
-                field: "use_interface_sources",
-                label: "同传 接口来源",
-                bottomHelpMessage: "选择同传接口来源",
-                component: "Select",
-                componentProps: {
-                  options: [
-                    { label: "Modelscope", value: "Modelscope" },
-                    { label: "Huggingface", value: "Huggingface" },
-                  ],
-                },
-              },
-              {
-                field: "use_speaker",
-                label: "同传发音人",
-                component: "Input",
-                required: true, 
-              },
-            ],
-          },
-        },
+          field: 'tts_sync_config',
+          label: '同传配置',
+          bottomHelpMessage: '用户同传配置',
+          component: 'GTags',
+        }
       ],
       getConfigData() {
-        let config = Config.getConfig()
-        return config
+        return Config.getConfig();
       },
-
       setConfigData(data, { Result }) {
-        let config = {}
-        for (let [keyPath, value] of Object.entries(data)) {
-          lodash.set(config, keyPath, value)
-        }
-        config = lodash.merge({}, Config.getConfig(), config)
-        config.tts_sync_config = data['tts_sync_config']
-        Config.setConfig(config)
-        return Result.ok({}, '保存成功~')
-      },
-    },
-  }
+        Config.setConfig(data);
+        return Result.ok({}, '保存成功');
+      }
+    }
+  };
 }
