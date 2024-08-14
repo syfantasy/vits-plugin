@@ -1,13 +1,13 @@
-import YAML from 'yaml'
 import fs from 'fs'
+import yaml from 'yaml'
 import { pluginRoot } from '../model/path.js'
 
 class Config {
   getConfig() {
     const configPath = `${pluginRoot}/config/config/config.yaml`
     try {
-      const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
-      return config
+      const file = fs.readFileSync(configPath, 'utf8')
+      return yaml.parse(file)
     } catch (error) {
       console.error('读取配置文件失败:', error)
       return {}
@@ -17,7 +17,7 @@ class Config {
   setConfig(config) {
     const configPath = `${pluginRoot}/config/config/config.yaml`
     try {
-      const yamlStr = YAML.stringify(config)
+      const yamlStr = yaml.stringify(config)
       fs.writeFileSync(configPath, yamlStr, 'utf8')
     } catch (error) {
       console.error('写入配置文件失败:', error)
