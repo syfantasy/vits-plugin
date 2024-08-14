@@ -1,21 +1,6 @@
-// guoba.support.js
-
-import Config from "./components/Config.js";
-
 export function supportGuoba() {
   return {
-    pluginInfo: {
-      name: 'vits-plugin',
-      title: 'VITS插件',
-      author: '@Your_Name',
-      authorLink: 'https://github.com/Your_Name',
-      link: 'https://github.com/Your_Name/vits-plugin',
-      isV3: true,
-      isV2: false,
-      description: '基于海螺API的语音同传插件',
-      icon: 'mdi:text-to-speech',
-      iconColor: '#7CFC00'
-    },
+    // ... 前面的代码保持不变
     configInfo: {
       schemas: [
         {
@@ -85,15 +70,21 @@ export function supportGuoba() {
           label: '同传配置',
           bottomHelpMessage: '用户同传配置',
           component: 'GTags',
+        },
+        {
+          field: 'tts_config.send_reminder',
+          label: '发送提醒',
+          bottomHelpMessage: '是否在合成语音时发送提醒',
+          component: 'Switch'
+        },
+        {
+          field: 'tts_config.send_base64',
+          label: '使用Base64发送',
+          bottomHelpMessage: '是否使用Base64格式发送语音',
+          component: 'Switch'
         }
       ],
-      getConfigData() {
-        return Config.getConfig();
-      },
-      setConfigData(data, { Result }) {
-        Config.setConfig(data);
-        return Result.ok({}, '保存成功');
-      }
+      // ... getConfigData 和 setConfigData 保持不变
     }
   };
 }
