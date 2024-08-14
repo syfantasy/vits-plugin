@@ -2,3 +2,6 @@ api_key: 'your_default_api_key'
 api_url: 'https://hailuo-free-api-0rpw.onrender.com/v1/audio/speech'
 default_voice: 'male-botong'
 tts_sync_config: []
+tts_config:
+  send_reminder: true
+  send_base64: false
