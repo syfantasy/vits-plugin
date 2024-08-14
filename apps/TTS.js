@@ -53,7 +53,13 @@ export class TTS extends plugin {
       const audioFilePath = path.join(process.cwd(), `temp_${Date.now()}.mp3`);
       await streamPipeline(response.body, fs.createWriteStream(audioFilePath));
 
-      await e.reply(segment.record(audioFilePath));
+      if (config.tts_config.send_base64) {
+        const audioData = fs.readFileSync(audioFilePath);
+        const base64Audio = audioData.toString('base64');
+        await e.reply(segment.record(`base64://${base64Audio}`));
+      } else {
+        await e.reply(segment.record(audioFilePath));
+      }
 
       // 删除临时文件
       fs.unlinkSync(audioFilePath);
